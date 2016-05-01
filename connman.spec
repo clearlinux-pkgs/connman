@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.32
-Release  : 7
+Release  : 8
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.32.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.32.tar.gz
 Summary  : Connection Manager
@@ -14,6 +14,7 @@ Requires: connman-bin
 Requires: connman-config
 Requires: connman-data
 Requires: connman-doc
+BuildRequires : ncurses-dev
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(glib-2.0)
 BuildRequires : pkgconfig(gnutls)
