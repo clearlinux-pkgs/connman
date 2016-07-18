@@ -1,0 +1,9 @@
+.*~
+*~
+*.swp
+*xz
+*gz
+
+results
+commitmsg
+mock*log

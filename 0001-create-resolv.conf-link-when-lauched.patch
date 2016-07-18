@@ -1,0 +1,86 @@
+From 58caad5c43590271b8a77db7d0a7092081dfe11a Mon Sep 17 00:00:00 2001
+From: Miguel Bernal Marin <miguel.bernal.marin@linux.intel.com>
+Date: Mon, 18 Jul 2016 09:44:54 -0500
+Subject: [PATCH] create resolv.conf link when lauched
+
+ClearLinux uses systemd-resolved as default.
+With this patch resolv.conf link is updated when connman service is
+launched, and avoids to overwrite resolv.conf link when connman is
+not used.
+---
+ Makefile.am                        |  9 ++++++---
+ scripts/connman_resolvconf.conf.in |  1 -
+ src/connman-resolvconf.service.in  | 10 ++++++++++
+ src/connman.service.in             |  2 +-
+ 4 files changed, 17 insertions(+), 5 deletions(-)
+ create mode 100644 src/connman-resolvconf.service.in
+
+diff --git a/Makefile.am b/Makefile.am
+index d70725c..afe2581 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -68,7 +68,8 @@ endif
+ 
+ if SYSTEMD
+ systemdunitdir = @SYSTEMD_UNITDIR@
+-systemdunit_DATA = src/connman.service src/connman-wait-online.service
++systemdunit_DATA = src/connman.service src/connman-wait-online.service \
++		   src/connman-resolvconf.service
+ 
+ tmpfilesdir = @SYSTEMD_TMPFILESDIR@
+ nodist_tmpfiles_DATA = scripts/connman_resolvconf.conf
+@@ -82,11 +83,13 @@ endif
+ service_files_sources = src/connman.service.in src/net.connman.service.in \
+ 				vpn/connman-vpn.service.in \
+ 				vpn/net.connman.vpn.service.in \
+-				src/connman-wait-online.service.in
++				src/connman-wait-online.service.in \
++				src/connman-resolvconf.service.in
+ service_files = src/connman.service src/net.connman.service \
+ 				vpn/connman-vpn.service \
+ 				vpn/net.connman.vpn.service \
+-				src/connman-wait-online.service
++				src/connman-wait-online.service \
++				src/connman-resolvconf.service
+ 
+ plugin_LTLIBRARIES =
+ 
+diff --git a/scripts/connman_resolvconf.conf.in b/scripts/connman_resolvconf.conf.in
+index 2d61dfe..8a7d307 100644
+--- a/scripts/connman_resolvconf.conf.in
++++ b/scripts/connman_resolvconf.conf.in
+@@ -1,2 +1 @@
+ d	@runstatedir@/connman	- - - -
+-L+	/etc/resolv.conf	- - - -	@runstatedir@/connman/resolv.conf
+diff --git a/src/connman-resolvconf.service.in b/src/connman-resolvconf.service.in
+new file mode 100644
+index 0000000..b903e2c
+--- /dev/null
++++ b/src/connman-resolvconf.service.in
+@@ -0,0 +1,10 @@
++[Unit]
++Description=Create a symlink to /etc/resolv.con for ConnMan
++Conflicts=shutdown.target
++
++[Service]
++Type=oneshot
++ExecStart=/usr/bin/ln -sf @runstatedir@/connman/resolv.conf /etc/resolv.conf
++
++[Install]
++WantedBy=connman.service
+diff --git a/src/connman.service.in b/src/connman.service.in
+index 57eaaf9..fd85cae 100644
+--- a/src/connman.service.in
++++ b/src/connman.service.in
+@@ -5,7 +5,7 @@ Conflicts=shutdown.target
+ RequiresMountsFor=@localstatedir@/lib/connman
+ After=dbus.service network-pre.target systemd-sysusers.service
+ Before=network.target multi-user.target shutdown.target
+-Wants=network.target
++Wants=connman-resolvconf.service network.target
+ 
+ [Service]
+ Type=dbus
+-- 
+2.9.0
+

@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.32
-Release  : 8
+Release  : 9
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.32.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.32.tar.gz
 Summary  : Connection Manager
@@ -14,7 +14,14 @@ Requires: connman-bin
 Requires: connman-config
 Requires: connman-data
 Requires: connman-doc
+BuildRequires : automake
+BuildRequires : automake-dev
+BuildRequires : gettext-bin
+BuildRequires : libtool
+BuildRequires : libtool-dev
+BuildRequires : m4
 BuildRequires : ncurses-dev
+BuildRequires : pkg-config-dev
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(glib-2.0)
 BuildRequires : pkgconfig(gnutls)
@@ -23,6 +30,7 @@ BuildRequires : pkgconfig(xtables)
 BuildRequires : readline-dev
 BuildRequires : systemd-dev
 BuildRequires : wpa_supplicant
+Patch1: 0001-create-resolv.conf-link-when-lauched.patch
 
 %description
 Connection Manager
@@ -77,12 +85,15 @@ doc components for the connman package.
 
 %prep
 %setup -q -n connman-1.32
+%patch1 -p1
 
 %build
-%configure --disable-static
+export LANG=C
+%reconfigure --disable-static
 make V=1  %{?_smp_mflags}
 
 %check
+export LANG=C
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost
@@ -103,6 +114,7 @@ rm -rf %{buildroot}
 
 %files config
 %defattr(-,root,root,-)
+/usr/lib/systemd/system/connman-resolvconf.service
 /usr/lib/systemd/system/connman-wait-online.service
 /usr/lib/systemd/system/connman.service
 /usr/lib/tmpfiles.d/connman_resolvconf.conf
