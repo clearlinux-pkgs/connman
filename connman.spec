@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.33
-Release  : 12
+Release  : 13
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.33.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.33.tar.gz
 Summary  : Connection Manager
