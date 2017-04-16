@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.33
-Release  : 15
+Release  : 16
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.33.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.33.tar.gz
 Summary  : Connection Manager
@@ -21,6 +21,7 @@ BuildRequires : libtool
 BuildRequires : libtool-dev
 BuildRequires : m4
 BuildRequires : ncurses-dev
+BuildRequires : openconnect-dev
 BuildRequires : pkg-config-dev
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(glib-2.0)
@@ -89,6 +90,7 @@ doc components for the connman package.
 
 %build
 export LANG=C
+export SOURCE_DATE_EPOCH=1492305832
 %reconfigure --disable-static
 make V=1  %{?_smp_mflags}
 
@@ -100,6 +102,7 @@ export no_proxy=localhost
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
+export SOURCE_DATE_EPOCH=1492305832
 rm -rf %{buildroot}
 %make_install
 
@@ -143,7 +146,7 @@ rm -rf %{buildroot}
 /usr/include/connman/session.h
 /usr/include/connman/storage.h
 /usr/include/connman/version.h
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/pkgconfig/connman.pc
 
 %files doc
 %defattr(-,root,root,-)
