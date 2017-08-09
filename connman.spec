@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.34
-Release  : 21
+Release  : 22
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.34.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.34.tar.gz
 Summary  : Connection Manager
@@ -30,9 +30,9 @@ BuildRequires : pkgconfig(libnftnl)
 BuildRequires : pkgconfig(systemd)
 BuildRequires : pkgconfig(xtables)
 BuildRequires : readline-dev
-BuildRequires : systemd-dev
 BuildRequires : wpa_supplicant
 Patch1: 0001-create-resolv.conf-link-when-lauched.patch
+Patch2: cve-2017-xxxx.patch
 
 %description
 Connection Manager
@@ -78,13 +78,18 @@ doc components for the connman package.
 %prep
 %setup -q -n connman-1.34
 %patch1 -p1
+%patch2 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1502294962
+export SOURCE_DATE_EPOCH=1502296750
+export CFLAGS="$CFLAGS -fstack-protector-strong "
+export FCFLAGS="$CFLAGS -fstack-protector-strong "
+export FFLAGS="$CFLAGS -fstack-protector-strong "
+export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
 %reconfigure --disable-static
 make V=1  %{?_smp_mflags}
 
@@ -96,7 +101,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1502294962
+export SOURCE_DATE_EPOCH=1502296750
 rm -rf %{buildroot}
 %make_install
 
