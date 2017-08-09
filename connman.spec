@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.34
-Release  : 20
+Release  : 21
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.34.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.34.tar.gz
 Summary  : Connection Manager
@@ -12,7 +12,6 @@ Group    : Development/Tools
 License  : GPL-2.0
 Requires: connman-bin
 Requires: connman-config
-Requires: connman-data
 Requires: connman-doc
 BuildRequires : automake
 BuildRequires : automake-dev
@@ -26,6 +25,7 @@ BuildRequires : pkg-config-dev
 BuildRequires : pkgconfig(dbus-1)
 BuildRequires : pkgconfig(glib-2.0)
 BuildRequires : pkgconfig(gnutls)
+BuildRequires : pkgconfig(libmnl)
 BuildRequires : pkgconfig(libnftnl)
 BuildRequires : pkgconfig(systemd)
 BuildRequires : pkgconfig(xtables)
@@ -43,7 +43,6 @@ Functionality and features
 %package bin
 Summary: bin components for the connman package.
 Group: Binaries
-Requires: connman-data
 Requires: connman-config
 
 %description bin
@@ -58,19 +57,10 @@ Group: Default
 config components for the connman package.
 
 
-%package data
-Summary: data components for the connman package.
-Group: Data
-
-%description data
-data components for the connman package.
-
-
 %package dev
 Summary: dev components for the connman package.
 Group: Development
 Requires: connman-bin
-Requires: connman-data
 Provides: connman-devel
 
 %description dev
@@ -94,7 +84,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1493403536
+export SOURCE_DATE_EPOCH=1502294962
 %reconfigure --disable-static
 make V=1  %{?_smp_mflags}
 
@@ -106,7 +96,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1493403536
+export SOURCE_DATE_EPOCH=1502294962
 rm -rf %{buildroot}
 %make_install
 
@@ -125,10 +115,6 @@ rm -rf %{buildroot}
 /usr/lib/systemd/system/connman-wait-online.service
 /usr/lib/systemd/system/connman.service
 /usr/lib/tmpfiles.d/connman_resolvconf.conf
-
-%files data
-%defattr(-,root,root,-)
-/usr/share/dbus-1/system.d/connman.conf
 
 %files dev
 %defattr(-,root,root,-)
