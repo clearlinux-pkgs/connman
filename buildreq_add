@@ -5,3 +5,4 @@ openconnect-dev
 wpa_supplicant
 readline-dev
 pkgconfig(systemd)
+linux-firmware-wifi

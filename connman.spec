@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.35
-Release  : 24
+Release  : 25
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.35.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.35.tar.gz
 Summary  : Connection Manager
@@ -13,11 +13,13 @@ License  : GPL-2.0
 Requires: connman-bin
 Requires: connman-config
 Requires: connman-doc
+Requires: linux-firmware-wifi
 BuildRequires : automake
 BuildRequires : automake-dev
 BuildRequires : gettext-bin
 BuildRequires : libtool
 BuildRequires : libtool-dev
+BuildRequires : linux-firmware-wifi
 BuildRequires : m4
 BuildRequires : ncurses-dev
 BuildRequires : openconnect-dev
@@ -83,13 +85,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1502420774
-export CFLAGS="$CFLAGS -fstack-protector-strong "
-export FCFLAGS="$CFLAGS -fstack-protector-strong "
-export FFLAGS="$CFLAGS -fstack-protector-strong "
-export CXXFLAGS="$CXXFLAGS -fstack-protector-strong "
+export SOURCE_DATE_EPOCH=1525654825
+export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
+export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
+export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
+export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs "
 %reconfigure --disable-static
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 %check
 export LANG=C
@@ -99,7 +101,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1502420774
+export SOURCE_DATE_EPOCH=1525654825
 rm -rf %{buildroot}
 %make_install
 
