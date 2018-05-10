@@ -4,7 +4,7 @@
 #
 Name     : connman
 Version  : 1.35
-Release  : 25
+Release  : 26
 URL      : https://www.kernel.org/pub/linux/network/connman/connman-1.35.tar.gz
 Source0  : https://www.kernel.org/pub/linux/network/connman/connman-1.35.tar.gz
 Summary  : Connection Manager
